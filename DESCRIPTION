@@ -1,0 +1,16 @@
+Package: circos.triangulate
+Title: Create Neat Circos Plots for Displaying Triangulated Data
+Version: 0.0.0.9000
+Authors@R: 
+    person("Lisa", "Hobson", , "lisa.hobson@bristol.ac.uk", role = c("cre", "aut"), comment = c(ORCID = "0009-0003-7994-8880"))
+Description: A solution to displaying multiple sources of data for the same values on multiple tracks with segements based on custom criteria, provided with a data frame, customise which tracks data is displayed on, how many tracks are required, the segments to subset the data by, custom colour scheme, generate odds ratios and deal with missing data. This package uses the 'circlize' package to create beautiful publication ready circular plots for protein or metabolite data from a number of different analyses, adjusting track size for the best visualisation. 
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Imports:
+    circlize,
+    data.table,
+    dplyr,
+    viridis
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
