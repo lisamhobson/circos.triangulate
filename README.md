@@ -7,7 +7,7 @@ easy visualisation of large numbers of protein analyses, with
 triangulated data in mind, allowing each different source to be
 displayed as a different track. Automatic resizing occurs to ensure
 tracks are displayed clearly, with custom options such as generating
-odds ratios where a beta and standard error column are given, chosing
+odds ratios where a beta and standard error column are given, choosing
 which set of data is displayed as the primary (1st) track and dealing
 with missing data.
 
@@ -15,13 +15,13 @@ To ensure the expected outcome data should be formatted in a
 `data.frame` as in the example below.
 
     #>   protein disease           method           b          se track_id   segment
-    #> 1       a  cancer  Direct Measures  0.12108367 0.039372870        3 segment 1
-    #> 2       b  cancer  Direct Measures -0.87716034 0.005607534        3 segment 2
-    #> 3       a  cancer Reverse MR (IVW) -0.04932146 0.021445470        1 segment 1
-    #> 4       b  cancer Reverse MR (IVW)  0.03221768 0.023453840        1 segment 2
-    #> 5       a  cancer Forward MR (IVW)  0.26274116 0.004008691        2 segment 1
-    #> 6       a  cancer   Other Analysis -1.24402014 0.027558810        4 segment 1
-    #> 7       b  cancer   Other Analysis  0.12321263 0.031705661        4 segment 2
+    #> 1       a  cancer  Direct Measures -0.72450336 0.001469585        3 segment 1
+    #> 2       b  cancer  Direct Measures  0.65563880 0.038746601        3 segment 2
+    #> 3       a  cancer Reverse MR (IVW)  0.05484582 0.019482989        1 segment 1
+    #> 4       b  cancer Reverse MR (IVW)  0.01879154 0.016564321        1 segment 2
+    #> 5       b  cancer Forward MR (IVW) -0.42519888 0.007064904        2 segment 2
+    #> 6       a  cancer   Other Analysis  1.90848671 0.039844246        4 segment 1
+    #> 7       b  cancer   Other Analysis -1.68046436 0.022071074        4 segment 2
 
 To generate a `circos.triangulate` plot follow the example below:
 
