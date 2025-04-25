@@ -14,15 +14,14 @@ with missing data.
 To ensure the expected outcome data should be formatted in a
 `data.frame` as in the example below.
 
-    #>   protein disease           method           b          se track_id   segment
-    #> 1       a  cancer  Direct Measures  0.89072846 0.007767377        3 segment 1
-    #> 2       b  cancer  Direct Measures  0.53127996 0.019442063        3 segment 2
-    #> 3       a  cancer Reverse MR (IVW)  0.01320296 0.032406131        1 segment 1
-    #> 4       b  cancer Reverse MR (IVW)  0.07656988 0.002151979        1 segment 2
-    #> 5       b  cancer Forward MR (IVW)  0.03387963 0.015050333        2 segment 2
-    #> 6       a  cancer Forward MR (IVW) -0.46365763 0.002417289        2 segment 1
-    #> 7       a  cancer   Other Analysis -0.86554400 0.043312867        4 segment 1
-    #> 8       b  cancer   Other Analysis  0.83199648 0.015875112        4 segment 2
+    #>   protein disease           method            b          se track_id   segment
+    #> 1       a  cancer  Direct Measures -0.939059126 0.033562743        3 segment 1
+    #> 2       b  cancer  Direct Measures -0.835790732 0.026980173        3 segment 2
+    #> 3       a  cancer Reverse MR (IVW) -0.004989737 0.003202195        1 segment 1
+    #> 4       b  cancer Reverse MR (IVW)  0.064150701 0.036269796        1 segment 2
+    #> 5       b  cancer Forward MR (IVW) -0.228201239 0.003034502        2 segment 2
+    #> 6       a  cancer   Other Analysis -0.023838665 0.031889329        4 segment 1
+    #> 7       b  cancer   Other Analysis  1.060758886 0.001828662        4 segment 2
 
 To generate a `circos.triangulate` plot follow the example below:
 
@@ -39,8 +38,8 @@ circos_protein_plot(circos_data = sample_data, # data.table containing all of th
                     primary_track = "1", # variable from "track_id_column" to determine which track is first to plot and used to generate names
                     segment_names_column = "segment", # column containing factor to subset data on
                     # optional
-                    odds_ratios = TRUE, # bolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
-                    error_bar_ends = TRUE, # bolean value, whether to add ends to error bars (default = T)
+                    odds_ratios = TRUE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
+                    error_bar_ends = TRUE, # boolean value, whether to add ends to error bars (default = T)
                     custom_pallet = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour pallet, supports viridis or custom vector
                     )
 ```
