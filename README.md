@@ -14,20 +14,20 @@ with missing data.
 To ensure the expected outcome data should be formatted in a
 `data.frame` as in the example below.
 
-    #>   protein disease           method            b          se track_id   segment
-    #> 1       a  cancer  Direct Measures -0.939059126 0.033562743        3 segment 1
-    #> 2       b  cancer  Direct Measures -0.835790732 0.026980173        3 segment 2
-    #> 3       a  cancer Reverse MR (IVW) -0.004989737 0.003202195        1 segment 1
-    #> 4       b  cancer Reverse MR (IVW)  0.064150701 0.036269796        1 segment 2
-    #> 5       b  cancer Forward MR (IVW) -0.228201239 0.003034502        2 segment 2
-    #> 6       a  cancer   Other Analysis -0.023838665 0.031889329        4 segment 1
-    #> 7       b  cancer   Other Analysis  1.060758886 0.001828662        4 segment 2
+    #>   protein disease           method           b          se track_id   segment
+    #> 1       a  cancer  Direct Measures  0.12108367 0.039372870        3 segment 1
+    #> 2       b  cancer  Direct Measures -0.87716034 0.005607534        3 segment 2
+    #> 3       a  cancer Reverse MR (IVW) -0.04932146 0.021445470        1 segment 1
+    #> 4       b  cancer Reverse MR (IVW)  0.03221768 0.023453840        1 segment 2
+    #> 5       a  cancer Forward MR (IVW)  0.26274116 0.004008691        2 segment 1
+    #> 6       a  cancer   Other Analysis -1.24402014 0.027558810        4 segment 1
+    #> 7       b  cancer   Other Analysis  0.12321263 0.031705661        4 segment 2
 
 To generate a `circos.triangulate` plot follow the example below:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("lisamhobson/circos.triangulate.git")
+remotes::install_github("lisamhobson/circos.triangulate")
 
 circos_protein_plot(circos_data = sample_data, # data.table containing all of the data to plot
                     total_track_number = 4, # total number of tracks to plot (can be less than sources of data if only plotting subset)
