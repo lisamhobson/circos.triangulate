@@ -4,3 +4,5 @@
 .Ruserdata
 circos.triangulate.Rproj
 .DS_Store
+.DS_Store
+README.Rmd
