@@ -2,6 +2,12 @@
 
 devtools::install_deps(dependencies = TRUE)
 
+#' @import circlize
+#' @import data.table
+#' @import dplyr
+#' @import viridis
+
+#' @export
 circos_protein_plot <- function(circos_data,
                                 total_track_number,
                                 track_id_column,
