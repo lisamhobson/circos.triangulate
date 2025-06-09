@@ -14,20 +14,30 @@ with missing data.
 To ensure the expected outcome data should be formatted in a
 `data.frame` as in the example below.
 
-    #>   protein disease           method           b          se track_id   segment
-    #> 1       a  cancer  Direct Measures -0.72450336 0.001469585        3 segment 1
-    #> 2       b  cancer  Direct Measures  0.65563880 0.038746601        3 segment 2
-    #> 3       a  cancer Reverse MR (IVW)  0.05484582 0.019482989        1 segment 1
-    #> 4       b  cancer Reverse MR (IVW)  0.01879154 0.016564321        1 segment 2
-    #> 5       b  cancer Forward MR (IVW) -0.42519888 0.007064904        2 segment 2
-    #> 6       a  cancer   Other Analysis  1.90848671 0.039844246        4 segment 1
-    #> 7       b  cancer   Other Analysis -1.68046436 0.022071074        4 segment 2
+    #>   protein disease           method             b           se track_id
+    #> 1       a  cancer  Direct Measures -0.7103975601 0.0235400403        3
+    #> 2       b  cancer  Direct Measures -0.1249684612 0.0002788665        3
+    #> 3       a  cancer Reverse MR (IVW) -0.0924579104 0.0337596620        1
+    #> 4       b  cancer Reverse MR (IVW)  0.0009113503 0.0080741077        1
+    #> 5       a  cancer Forward MR (IVW) -0.5297028850 0.0066467277        2
+    #> 6       b  cancer Forward MR (IVW) -0.3933940993 0.0234348884        2
+    #> 7       a  cancer   Other Analysis  1.5098517407 0.0195729367        4
+    #> 8       b  cancer   Other Analysis  1.6779766828 0.0067239027        4
+    #>     segment
+    #> 1 segment 1
+    #> 2 segment 2
+    #> 3 segment 1
+    #> 4 segment 2
+    #> 5 segment 1
+    #> 6 segment 2
+    #> 7 segment 1
+    #> 8 segment 2
 
 To generate a `circos.triangulate` plot follow the example below:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("lisamhobson/circos.triangulate")
+remotes::install_github("lisamhobson/circos.triangulate", force=T)
 
 circos_protein_plot(circos_data = sample_data, # data.table containing all of the data to plot
                     total_track_number = 4, # total number of tracks to plot (can be less than sources of data if only plotting subset)

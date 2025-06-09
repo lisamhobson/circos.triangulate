@@ -65,7 +65,7 @@ To generate a `circos.triangulate` plot follow the example below:
 
 ```{r eval=F, include=T, echo=T}
 # install.packages("remotes")
-remotes::install_github("lisamhobson/circos.triangulate")
+remotes::install_github("lisamhobson/circos.triangulate", force=T)
 
 circos_protein_plot(circos_data = sample_data, # data.table containing all of the data to plot
                     total_track_number = 4, # total number of tracks to plot (can be less than sources of data if only plotting subset)
