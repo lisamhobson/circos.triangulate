@@ -99,7 +99,7 @@ circos_protein_plot <- function(circos_data,
   #   circos_data_track1$label_text_formatted[i] <- paste0(wrapper(circos_data_track1$olink_target_fullname[i], width = 25), " (", circos_data_track1$protein[i] ,")")
   # }
 
-  circos.clear()
+  circlize::circos.clear()
   col_text <- "grey40"
 
   circos.par("track.height"= total_track_number, gap.degree = 15, start.degree=90, cell.padding=c(0, 0, 0, 0), circle.margin=rep(0.1, 4))
