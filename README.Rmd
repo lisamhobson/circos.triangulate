@@ -86,7 +86,7 @@ circos_protein_plot(circos_data = sample_data, # data.table containing all of th
 
 ## Segment circos plot
 
-```{r}
+```{r eval=F, include=T, echo=T}
 # zoom in on one segment 
 circos_protein_plot_segment(circos_data = sample_data, # data.table containing all of the data to plot
                     total_track_number = 4, # total number of tracks to plot (can be less than sources of data if only plotting subset)
