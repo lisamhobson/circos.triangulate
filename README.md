@@ -1,8 +1,6 @@
 
 # circos.triangulate <img src="images/circos-triangulate-icon.png" align="right" height="138"/></a>
 
-![](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)
-
 `circos.triangulate` is build from the
 [`Circlize`](https://github.com/jokergoo/circlize) package to allow for
 easy visualisation of large numbers of protein analyses, with
@@ -16,14 +14,14 @@ with missing data.
 To ensure the expected outcome data should be formatted in a
 `data.frame` as in the example below.
 
-    #>   protein disease           method           b         se track_id   segment
-    #> 1       a  cancer  Direct Measures  0.75873457 0.01488420        3 segment 1
-    #> 2       b  cancer  Direct Measures  0.44981898 0.01851388        3 segment 2
-    #> 3       a  cancer Reverse MR (IVW) -0.03477842 0.02498448        1 segment 1
-    #> 4       b  cancer Reverse MR (IVW) -0.05525846 0.02709400        1 segment 2
-    #> 5       a  cancer Forward MR (IVW) -0.62212701 0.03858461        2 segment 1
-    #> 6       a  cancer   Other Analysis -1.60011062 0.01840508        4 segment 1
-    #> 7       b  cancer   Other Analysis  1.21513246 0.02521807        4 segment 2
+    #>   protein disease           method           b          se track_id   segment
+    #> 1       a  cancer  Direct Measures -0.72450336 0.001469585        3 segment 1
+    #> 2       b  cancer  Direct Measures  0.65563880 0.038746601        3 segment 2
+    #> 3       a  cancer Reverse MR (IVW)  0.05484582 0.019482989        1 segment 1
+    #> 4       b  cancer Reverse MR (IVW)  0.01879154 0.016564321        1 segment 2
+    #> 5       b  cancer Forward MR (IVW) -0.42519888 0.007064904        2 segment 2
+    #> 6       a  cancer   Other Analysis  1.90848671 0.039844246        4 segment 1
+    #> 7       b  cancer   Other Analysis -1.68046436 0.022071074        4 segment 2
 
 To generate a `circos.triangulate` plot follow the example below:
 
