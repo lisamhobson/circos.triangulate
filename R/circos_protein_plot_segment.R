@@ -2,6 +2,7 @@
 
 devtools::install_deps(dependencies = TRUE)
 
+#' @export
 circos_protein_plot_segment <- function(circos_data,
                                 total_track_number,
                                 track_id_column,
