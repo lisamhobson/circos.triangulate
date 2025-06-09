@@ -119,7 +119,7 @@ circos_protein_plot <- function(circos_data,
                                      chr = circlize::get.cell.meta.data("sector.index")
                                      xlim = circlize::get.cell.meta.data("xlim")
                                      ylim = circlize::get.cell.meta.data("ylim")
-                                     circlize::circos.text(circos_data_track_main$order -0.5, mean(ylim), sector.index = get.current.sector.index(), labels = circos_data_track_main %>% filter(tier_section == chr) %>% pull(protein), facing = "clockwise", niceFacing = TRUE, adj=0.1, cex = 1, col = 'black')
+                                     circlize::circos.text(circos_data_track_main$order -0.5, mean(ylim), sector.index = circlize::get.current.sector.index(), labels = circos_data_track_main %>% filter(tier_section == chr) %>% pull(protein), facing = "clockwise", niceFacing = TRUE, adj=0.1, cex = 1, col = 'black')
                                    }, bg.border = NA)
     # )
 
@@ -154,8 +154,8 @@ circos_protein_plot <- function(circos_data,
                                major.at = NULL,
                                labels = F,
                                major.tick = F,
-                               sector.index = get.current.sector.index(),
-                               track.index = get.current.track.index(),
+                               sector.index = circlize::get.current.sector.index(),
+                               track.index = circlize::get.current.track.index(),
                                col = 'grey30')
 
                              circlize::circos.points(
