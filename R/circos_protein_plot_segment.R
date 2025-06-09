@@ -2,6 +2,7 @@
 
 devtools::install_deps(dependencies = TRUE)
 
+#' @param circos_protein_plot_segment circos_data = data.table containing all of the data to plot, total_track_number = total number of tracks to plot (can be less than sources of data if only plotting subset), track_id_column = name of column containing variable to determine which track e.g. method / data source, protein_column = column containing names of proteins, beta_column = column containing beta value, se_column = column containing standard error to generate error bars, primary_track = variable from "track_id_column" to determine which track is first to plot and used to generate names, segment_names_column = column containing factor to subset data on, segment_to_display = segment to zoom in on. OPTIONAL: odds_ratios = boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE), error_bar_ends = TRUE/FALSE whether to add ends to error bars (default = T), custom_pallet = provide custom colour pallet, supports viridis or custom vectors
 #' @export
 circos_protein_plot_segment <- function(circos_data,
                                 total_track_number,
