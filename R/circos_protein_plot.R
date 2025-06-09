@@ -3,8 +3,8 @@
 devtools::install_deps(dependencies = TRUE)
 
 #' @import circlize
-#' @import data.table
 #' @import dplyr
+#' @import data.table
 #' @import viridis
 
 #' @export
@@ -108,9 +108,9 @@ circos_protein_plot <- function(circos_data,
   circlize::circos.clear()
   col_text <- "grey40"
 
-  circos.par("track.height"= total_track_number, gap.degree = 15, start.degree=90, cell.padding=c(0, 0, 0, 0), circle.margin=rep(0.1, 4))
-  circos.initialize(factors=circos_data_track_main$tier_section, xlim=matrix(c(rep(0, nrow(freq_table)), freq_table$`length(tier_section)`), ncol=2))
-  circos.par("points.overflow.warning" = F)
+  circlize::circos.par("track.height"= total_track_number, gap.degree = 15, start.degree=90, cell.padding=c(0, 0, 0, 0), circle.margin=rep(0.1, 4))
+  circlize::circos.initialize(factors=circos_data_track_main$tier_section, xlim=matrix(c(rep(0, nrow(freq_table)), freq_table$`length(tier_section)`), ncol=2))
+  circlize::circos.par("points.overflow.warning" = F)
 
   # suppressMessages(
     circlize::circos.trackPlotRegion(factors = circos_data_track_main$tier_section,
@@ -149,7 +149,7 @@ circos_protein_plot <- function(circos_data,
                                                    col = custom_pallet[i])
 
 
-                             circos.axis(
+                             circlize::circos.axis(
                                h = null,
                                major.at = NULL,
                                labels = F,
@@ -173,7 +173,7 @@ circos_protein_plot <- function(circos_data,
                                straight = T)
 
                              if(error_bar_ends == T) {
-                               circos.segments(
+                               circlize::circos.segments(
                                  y0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(lo_ci95),
                                  x0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) - 0.5 +0.05,
                                  y1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(lo_ci95),
@@ -181,7 +181,7 @@ circos_protein_plot <- function(circos_data,
                                  col = "black",
                                  straight = T)
 
-                               circos.segments(
+                               circlize::circos.segments(
                                  y0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(up_ci95),
                                  x0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) - 0.5 +0.05,
                                  y1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(up_ci95),
