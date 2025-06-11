@@ -19,9 +19,6 @@ circos_protein_plot <- function(circos_data,
                                 custom_pallet,
                                 primary_track,
                                 error_bar_ends) {
-  if(missing(primary_track)) {
-    primary_track <- 1
-  }
 
   if(missing(custom_pallet)) {
     custom_pallet <- viridis::viridis(n = total_track_number+5)[total_track_number+5:1]
@@ -83,7 +80,6 @@ circos_protein_plot <- function(circos_data,
   }
 
 
-
   circos_data_track_main <- circos_data %>% dplyr::group_by(protein) %>% filter(track_id == primary_track)
 
   freq_table <- circos_data_track_main %>% dplyr::group_by(tier_section) %>% summarise(length(tier_section)) %>% as.data.frame()
@@ -137,10 +133,10 @@ circos_protein_plot <- function(circos_data,
                                    }, bg.border = NA)
 
   for(i in 1:total_track_number) {
-    assign(paste0("circos_data_track", i), circos_data %>% filter(track_id == i) %>% merge(circos_data_track_main[c("protein", "x", "order", "n","ncat", "tier_section")]))
+    assign(paste0("circos_data_track", i), circos_data %>% filter(track_id == as.factor(circos_data$track_id)[1:4][i]) %>% merge(circos_data_track_main[c("protein", "x", "order", "n","ncat", "tier_section")]))
 
-    circlize::circos.track(factors = circos_data$tier_section,
-                           track.index = i+2, x = circos_data$ncat, ylim=c(min(get(paste0("circos_data_track", i))$lo_ci95), max(get(paste0("circos_data_track", i))$up_ci95)),
+    circlize::circos.track(factors = get(paste0("circos_data_track", i))$tier_section,
+                           track.index = i+2, x = get(paste0("circos_data_track", i))$ncat, ylim=c(min(get(paste0("circos_data_track", i))$lo_ci95), max(get(paste0("circos_data_track", i))$up_ci95)),
                            track.height = 0.6/total_track_number, panel.fun = function(x, y) {
                              chr = circlize::get.cell.meta.data("sector.index")
                              xlim = circlize::get.cell.meta.data("xlim")
@@ -201,3 +197,4 @@ circos_protein_plot <- function(circos_data,
   }
 
 }
+
