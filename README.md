@@ -1,7 +1,7 @@
 
 # circos.triangulate <img src="images/circos-triangulate-icon.png" align="right" height="138"/></a>
 
-`circos.triangulate` is build from the
+`circos.triangulate` is built from the
 [`Circlize`](https://github.com/jokergoo/circlize) package to allow for
 easy visualisation of large numbers of protein analyses, with
 triangulated data in mind, allowing each different source to be
