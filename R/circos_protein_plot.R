@@ -16,19 +16,53 @@ circos_protein_plot <- function(circos_data,
                                 beta_column,
                                 se_column,
                                 odds_ratios,
-                                custom_pallet,
+                                custom_palette,
                                 primary_track,
                                 error_bar_ends) {
 
-  if(missing(custom_pallet)) {
-    custom_pallet <- viridis::viridis(n = total_track_number+5)[total_track_number+5:1]
+  if(missing(custom_palette)) {
+    custom_palette <- viridis::viridis(n = total_track_number+5)[total_track_number+5:1]
   }
 
+  colour_contrast_checker <- function(colour) {
+    rgb <- col2rgb(colour)
+    red <- rgb[1]
+    green <- rgb[2]
+    blue <- rgb[3]
+
+    brightness = sqrt(0.299*red^2 + 0.587*green^2 + 0.144*blue^2)
+
+    brightness
+
+    if (brightness > 129) {
+      "#000000"
+    } else {
+      "#FFFFFF"
+    }
+  }
   if(missing(odds_ratios)) {
     odds_ratios <- F
   }
   if(missing(error_bar_ends)) {
     error_bar_ends <- T
+  }
+
+  ### lighten/darken value
+  lighten_or_darken_value <- function(colour) {
+    redgreenblue <- col2rgb(colour)
+    red <- rgb[1]
+    green <- rgb[2]
+    blue <- rgb[3]
+
+    brightness = sqrt(0.299*red^2 + 0.587*green^2 + 0.144*blue^2)
+
+    brightness
+
+    if (brightness > 129) {
+      "grey5"
+    } else {
+      "grey30"
+    }
   }
 
   circos_data$tier_section <- circos_data[[segment_names_column]]
@@ -142,7 +176,7 @@ circos_protein_plot <- function(circos_data,
                              xlim = circlize::get.cell.meta.data("xlim")
                              ylim = circlize::get.cell.meta.data("ylim")
                              circlize::circos.rect(xlim[1], ylim[1], xlim[2], ylim[2], border = NA,
-                                                   col = custom_pallet[i])
+                                                   col = custom_palette[i])
 
 
                              circlize::circos.axis(
@@ -152,21 +186,22 @@ circos_protein_plot <- function(circos_data,
                                major.tick = F,
                                sector.index = circlize::get.current.sector.index(),
                                track.index = circlize::get.current.track.index(),
-                               col = 'grey30')
+                               col = lighten_or_darken_value(custom_palette[i]))
 
                              circlize::circos.points(
                                x=get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) -0.5,
                                y=get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(y_value),
                                pch = 16,
-                               cex = .5)
+                               cex = .5,
+                               col = colour_contrast_checker(custom_palette[i]))
 
                              circlize::circos.segments(
                                x0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) -0.5,
                                y0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(lo_ci95),
                                x1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) -0.5,
                                y1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(up_ci95),
-                               col = "black",
-                               straight = T)
+                               straight = T,
+                               col = colour_contrast_checker(custom_palette[i]))
 
                              if(error_bar_ends == T) {
                                circlize::circos.segments(
@@ -174,16 +209,16 @@ circos_protein_plot <- function(circos_data,
                                  x0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) - 0.5 +0.05,
                                  y1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(lo_ci95),
                                  x1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) - 0.5 -0.05,
-                                 col = "black",
-                                 straight = T)
+                                 straight = T,
+                                 col = colour_contrast_checker(custom_palette[i]))
 
                                circlize::circos.segments(
                                  y0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(up_ci95),
                                  x0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) - 0.5 +0.05,
                                  y1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(up_ci95),
                                  x1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) - 0.5 -0.05,
-                                 col = "black",
-                                 straight = T)
+                                 straight = T,
+                                 col = colour_contrast_checker(custom_palette[i]))
                              }
                              circlize::circos.yaxis(
                                side = "left",
