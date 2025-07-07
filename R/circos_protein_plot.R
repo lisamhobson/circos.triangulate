@@ -176,7 +176,7 @@ circos_protein_plot <- function(circos_data,
                                      ylim = circlize::get.cell.meta.data("ylim")
                                      circlize::circos.rect(xlim[1], 0, xlim[2], 1, border = NA,
                                                            col = 'grey80')
-                                     circlize::circos.text(mean(xlim), mean(ylim)*1.5, chr,
+                                     circlize::circos.text(mean(xlim), mean(ylim), chr,
                                                            cex = 1, facing = "bending.outside", niceFacing = TRUE,
                                                            col = col_text)
                                    }, bg.border = NA)
@@ -208,14 +208,14 @@ circos_protein_plot <- function(circos_data,
                                y=get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(y_value),
                                pch = 16,
                                cex = .5,
-                               col = colour_contrast_checker(custom_palette[i])))
+                               col = colour_contrast_checker(custom_palette[i]))
 
                              circlize::circos.segments(
                                x0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) -0.5,
                                y0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(lo_ci95),
                                x1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) -0.5,
                                y1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(up_ci95),
-                               col = colour_contrast_checker(custom_palette[i])
+                               col = colour_contrast_checker(custom_palette[i]),
                                straight = T)
 
                              if(error_bar_ends == T) {
