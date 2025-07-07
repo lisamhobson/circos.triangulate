@@ -1,5 +1,7 @@
 ---
 output: github_document
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r, echo = FALSE}
@@ -12,7 +14,7 @@ knitr::opts_chunk$set(
 
 # circos.triangulate <img src="images/circos-triangulate-icon.png" align="right" height="138"/></a>
 
-`circos.triangulate` is build from the [`Circlize`](https://github.com/jokergoo/circlize) package to allow for easy visualisation of large numbers of protein analyses, with triangulated data in mind, allowing each different source to be displayed as a different track. Automatic resizing occurs to ensure tracks are displayed clearly, with custom options such as generating odds ratios where a beta and standard error column are given, choosing which set of data is displayed as the primary (1st) track and dealing with missing data.
+`circos.triangulate` is build from the [`Circlize`](https://github.com/jokergoo/circlize) package to allow for easy visualisation of large numbers of protein analyses, with triangulated data in mind, allowing each different source to be displayed as a different track. Automatic resizing occurs to ensure tracks are displayed clearly, with custom options such as generating odds ratios where a beta and standard error column are given, choosing which set of data is displayed as the primary (1st) track and dealing with missing data. Custom colour palettes now support dark colours, light points and error bars will automatically be applied when the track colour is dark. 
 
 To ensure the expected outcome data should be formatted in a `data.frame` as in the example below.
 
@@ -63,9 +65,10 @@ sample_data %>% filter(protein == "a" | protein == "b")
 
 To generate a `circos.triangulate` plot follow the example below:
 
-```{r eval=F, include=T, echo=T}
+```{r eval=F, echo=T, fig.height=7, fig.width=7, include=T}
 # install.packages("remotes")
 remotes::install_github("lisamhobson/circos.triangulate", force=T)
+library(circos.triangulate)
 
 circos_protein_plot(circos_data = sample_data, # data.table containing all of the data to plot
                     total_track_number = 4, # total number of tracks to plot (can be less than sources of data if only plotting subset)
