@@ -169,8 +169,8 @@ circos_protein_plot <- function(circos_data,
     circos_data_track_main$ncat[i] <- circos_data_track_main$x[i]/circos_data_track_main$n[i]
   }
 
-  for(i in 1:nrow(circos_data_track1)) {
-    circos_data_track1$label_text_formatted[i] <- paste0(wrapper(circos_data_track1$olink_target_fullname[i], width = 25), " (", circos_data_track1$protein[i] ,")")
+  for(i in 1:nrow(circos_data_track_main)) {
+    circos_data_track_main$label_text_formatted[i] <- paste0(wrapper(circos_data_track_main$olink_target_fullname[i], width = 25), " (", circos_data_track_main$protein[i] ,")")
   }
 
   circlize::circos.clear()
