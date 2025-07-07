@@ -78,7 +78,7 @@ circos_protein_plot(circos_data = sample_data, # data.table containing all of th
                     # optional
                     odds_ratios = TRUE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
                     error_bar_ends = TRUE, # boolean value, whether to add ends to error bars (default = T)
-                    custom_pallet = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour pallet, supports viridis or custom vector
+                    custom_palette = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour palette, supports viridis or custom vector
                     )
 ```
 
@@ -100,7 +100,7 @@ circos_protein_plot_segment(circos_data = sample_data, # data.table containing a
                     # optional
                     odds_ratios = TRUE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
                     error_bar_ends = TRUE, # boolean value, whether to add ends to error bars (default = T)
-                    custom_pallet = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour pallet, supports viridis or custom vector
+                    custom_palette = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour palette, supports viridis or custom vector
                     )
 ```
 

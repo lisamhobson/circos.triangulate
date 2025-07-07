@@ -14,14 +14,14 @@ with missing data.
 To ensure the expected outcome data should be formatted in a
 `data.frame` as in the example below.
 
-    #>   protein disease           method           b          se track_id   segment
-    #> 1       a  cancer  Direct Measures  0.68274098 0.012757433        3 segment 1
-    #> 2       b  cancer  Direct Measures  0.72480784 0.024761067        3 segment 2
-    #> 3       a  cancer Reverse MR (IVW) -0.01708223 0.022000286        1 segment 1
-    #> 4       b  cancer Reverse MR (IVW)  0.05954749 0.042628906        1 segment 2
-    #> 5       b  cancer Forward MR (IVW)  0.05704274 0.047463915        2 segment 2
-    #> 6       a  cancer   Other Analysis -0.05128895 0.043791955        4 segment 1
-    #> 7       b  cancer   Other Analysis  0.68129684 0.006483866        4 segment 2
+    #>   protein disease           method           b           se track_id   segment
+    #> 1       a  cancer  Direct Measures  0.18099261 0.0410658615        3 segment 1
+    #> 2       b  cancer  Direct Measures  0.98657357 0.0148078254        3 segment 2
+    #> 3       a  cancer Reverse MR (IVW) -0.06809121 0.0342575196        1 segment 1
+    #> 4       b  cancer Reverse MR (IVW)  0.07261495 0.0308602209        1 segment 2
+    #> 5       b  cancer Forward MR (IVW)  0.19931782 0.0009791377        2 segment 2
+    #> 6       a  cancer   Other Analysis -0.57609766 0.0309733830        4 segment 1
+    #> 7       b  cancer   Other Analysis  0.58931804 0.0382031278        4 segment 2
 
 To generate a `circos.triangulate` plot follow the example below:
 
@@ -40,7 +40,7 @@ circos_protein_plot(circos_data = sample_data, # data.table containing all of th
                     # optional
                     odds_ratios = TRUE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
                     error_bar_ends = TRUE, # boolean value, whether to add ends to error bars (default = T)
-                    custom_pallet = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour pallet, supports viridis or custom vector
+                    custom_palette = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour palette, supports viridis or custom vector
                     )
 ```
 
@@ -62,7 +62,7 @@ circos_protein_plot_segment(circos_data = sample_data, # data.table containing a
                     # optional
                     odds_ratios = TRUE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
                     error_bar_ends = TRUE, # boolean value, whether to add ends to error bars (default = T)
-                    custom_pallet = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour pallet, supports viridis or custom vector
+                    custom_palette = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour palette, supports viridis or custom vector
                     )
 ```
 
