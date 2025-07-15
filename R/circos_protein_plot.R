@@ -1,7 +1,9 @@
 #### circos.triangulate package ###
 
-devtools::install_deps(dependencies = TRUE)
-
+# devtools::install_deps(dependencies = TRUE)
+#' @title Circos Protein Plot
+#' @description
+#' A solution to displaying multiple sources of data for the same values on multiple tracks with segements based on custom criteria, provided with a data frame, customise which tracks data is displayed on, how many tracks are required, the segments to subset the data by, custom colour scheme, generate odds ratios and deal with missing data. This package uses the 'circlize' package to create beautiful publication ready circular plots for protein or metabolite data from a number of different analyses, adjusting track size for the best visualisation.
 #' @import circlize
 #' @import dplyr
 #' @import data.table
@@ -17,7 +19,6 @@ devtools::install_deps(dependencies = TRUE)
 #' @param odds_ratios (optional) boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
 #' @param error_bar_ends (optional) boolean value, whether to add ends to error bars (default = TRUE)
 #' @param custom_palette provide custom colour palette, supports viridis or custom vector
-#'
 #' @export
 circos_protein_plot <- function(circos_data,
                                 total_track_number,
@@ -30,9 +31,6 @@ circos_protein_plot <- function(circos_data,
                                 custom_palette,
                                 primary_track,
                                 error_bar_ends) {
-  # if(missing(primary_track)) {
-  #   primary_track <- 1
-  # }
 
   if(missing(custom_palette)) {
     custom_palette <- viridis::viridis(n = total_track_number+5)[total_track_number+5:1]
@@ -157,10 +155,6 @@ circos_protein_plot <- function(circos_data,
                                                             circos_data_track_main[[segment_names_column]][i])))
     circos_data_track_main$ncat[i] <- circos_data_track_main$x[i]/circos_data_track_main$n[i]
   }
-
-  # for(i in 1:nrow(circos_data_track1)) {
-  #   circos_data_track1$label_text_formatted[i] <- paste0(wrapper(circos_data_track1$olink_target_fullname[i], width = 25), " (", circos_data_track1$protein[i] ,")")
-  # }
 
   circlize::circos.clear()
   col_text <- "grey40"

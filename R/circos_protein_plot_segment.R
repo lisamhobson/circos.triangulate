@@ -1,8 +1,20 @@
 #### circos.triangulate package ###
 
 devtools::install_deps(dependencies = TRUE)
-
-#' @param circos_protein_plot_segment circos_data = data.table containing all of the data to plot, total_track_number = total number of tracks to plot (can be less than sources of data if only plotting subset), track_id_column = name of column containing variable to determine which track e.g. method / data source, protein_column = column containing names of proteins, beta_column = column containing beta value, se_column = column containing standard error to generate error bars, primary_track = variable from "track_id_column" to determine which track is first to plot and used to generate names, segment_names_column = column containing factor to subset data on, segment_to_display = segment to zoom in on. OPTIONAL: odds_ratios = boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE), error_bar_ends = TRUE/FALSE whether to add ends to error bars (default = T), custom_palette = provide custom colour palette, supports viridis or custom vectors
+#' @title circos protein plot segment
+#' @param circos_data data.table containing all of the data to plot
+#' @param total_track_number total number of tracks to plot (can be less than sources of data if only plotting subset)
+#' @param track_id_column name of column containing variable to determine which track e.g. method / data source
+#' @param segment_names_column column containing factor to subset data on
+#' @param segment_to_display segment to zoom in on
+#' @param protein_column column containing names of proteins/metabolites
+#' @param beta_column column containing beta value
+#' @param se_column column containing standard error
+#' @param primary_track variable from "track_id_column" to determine which track is first to plot and used to generate names
+#' @param odds_ratios (optional) boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
+#' @param error_bar_ends (optional) boolean value, whether to add ends to error bars (default = TRUE)
+#' @param custom_palette provide custom colour palette, supports viridis or custom vector
+#'
 #' @export circos_protein_plot_segment
 circos_protein_plot_segment <- function(circos_data,
                                 total_track_number,
