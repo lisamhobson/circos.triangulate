@@ -6,7 +6,18 @@ devtools::install_deps(dependencies = TRUE)
 #' @import dplyr
 #' @import data.table
 #' @import viridis
-
+#' @param circos_data data.table containing all of the data to plot
+#' @param total_track_number total number of tracks to plot (can be less than sources of data if only plotting subset)
+#' @param track_id_column name of column containing variable to determine which track e.g. method / data source
+#' @param segment_names_column column containing factor to subset data on
+#' @param protein_column column containing names of proteins/metabolites
+#' @param beta_column column containing beta value
+#' @param se_column column containing standard error
+#' @param primary_track variable from "track_id_column" to determine which track is first to plot and used to generate names
+#' @param odds_ratios (optional) boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
+#' @param error_bar_ends (optional) boolean value, whether to add ends to error bars (default = TRUE)
+#' @param custom_palette provide custom colour palette, supports viridis or custom vector
+#'
 #' @export
 circos_protein_plot <- function(circos_data,
                                 total_track_number,
@@ -37,10 +48,10 @@ circos_protein_plot <- function(circos_data,
   ### determine if colour is dark or light for chosing point colour
 
   colour_contrast_checker <- function(colour) {
-    rgb <- col2rgb(colour)
-    red <- rgb[1]
-    green <- rgb[2]
-    blue <- rgb[3]
+    redgreenblue <- col2rgb(colour)
+    red <- redgreenblue[1]
+    green <- redgreenblue[2]
+    blue <- redgreenblue[3]
 
     brightness = sqrt(0.299*red^2 + 0.587*green^2 + 0.144*blue^2)
 
@@ -56,9 +67,9 @@ circos_protein_plot <- function(circos_data,
   ### lighten/darken value
   lighten_or_darken_value <- function(colour) {
     redgreenblue <- col2rgb(colour)
-    red <- rgb[1]
-    green <- rgb[2]
-    blue <- rgb[3]
+    red <- redgreenblue[1]
+    green <- redgreenblue[2]
+    blue <- redgreenblue[3]
 
     brightness = sqrt(0.299*red^2 + 0.587*green^2 + 0.144*blue^2)
 

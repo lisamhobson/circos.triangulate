@@ -2,7 +2,7 @@
 
 devtools::install_deps(dependencies = TRUE)
 
-#' @param circos_protein_plot_segment circos_data = data.table containing all of the data to plot, total_track_number = total number of tracks to plot (can be less than sources of data if only plotting subset), track_id_column = name of column containing variable to determine which track e.g. method / data source, protein_column = column containing names of proteins, beta_column = column containing beta value, se_column = column containing standard error to generate error bars, primary_track = variable from "track_id_column" to determine which track is first to plot and used to generate names, segment_names_column = column containing factor to subset data on, segment_to_display = segment to zoom in on. OPTIONAL: odds_ratios = boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE), error_bar_ends = TRUE/FALSE whether to add ends to error bars (default = T), custom_pallet = provide custom colour pallet, supports viridis or custom vectors
+#' @param circos_protein_plot_segment circos_data = data.table containing all of the data to plot, total_track_number = total number of tracks to plot (can be less than sources of data if only plotting subset), track_id_column = name of column containing variable to determine which track e.g. method / data source, protein_column = column containing names of proteins, beta_column = column containing beta value, se_column = column containing standard error to generate error bars, primary_track = variable from "track_id_column" to determine which track is first to plot and used to generate names, segment_names_column = column containing factor to subset data on, segment_to_display = segment to zoom in on. OPTIONAL: odds_ratios = boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE), error_bar_ends = TRUE/FALSE whether to add ends to error bars (default = T), custom_palette = provide custom colour palette, supports viridis or custom vectors
 #' @export circos_protein_plot_segment
 circos_protein_plot_segment <- function(circos_data,
                                 total_track_number,
@@ -13,15 +13,15 @@ circos_protein_plot_segment <- function(circos_data,
                                 beta_column,
                                 se_column,
                                 odds_ratios,
-                                custom_pallet,
+                                custom_palette,
                                 primary_track,
                                 error_bar_ends) {
   if(missing(primary_track)) {
     primary_track <- 1
   }
 
-  if(missing(custom_pallet)) {
-    custom_pallet <- viridis::viridis(n = total_track_number+5)[total_track_number+5:1]
+  if(missing(custom_palette)) {
+    custom_palette <- viridis::viridis(n = total_track_number+5)[total_track_number+5:1]
   }
 
   if(missing(odds_ratios)) {
@@ -29,6 +29,51 @@ circos_protein_plot_segment <- function(circos_data,
   }
   if(missing(error_bar_ends)) {
     error_bar_ends <- T
+  }
+  ### determine if colour is dark or light for chosing point colour
+
+  colour_contrast_checker <- function(colour) {
+    redgreenblue <- col2rgb(colour)
+    red <- redgreenblue[1]
+    green <- redgreenblue[2]
+    blue <- redgreenblue[3]
+
+    brightness = sqrt(0.299*red^2 + 0.587*green^2 + 0.144*blue^2)
+
+    brightness
+
+    if (brightness > 129) {
+      "#000000"
+    } else {
+      "#FFFFFF"
+    }
+  }
+
+  ### lighten/darken value
+  lighten_or_darken_value <- function(colour) {
+    redgreenblue <- col2rgb(colour)
+    red <- redgreenblue[1]
+    green <- redgreenblue[2]
+    blue <- redgreenblue[3]
+
+    brightness = sqrt(0.299*red^2 + 0.587*green^2 + 0.144*blue^2)
+
+
+    if (brightness > 129) {
+      red_new <- red-20
+      green_new <- green-20
+      blue_new <- blue-20
+
+      new_colour <- rgb(red=as.integer(red_new)/255, green=as.integer(green_new)/255, blue=as.integer(blue_new)/255)
+      new_colour
+    } else {
+      red_new <- red+50
+      green_new <- green+50
+      blue_new <- blue+50
+
+      new_colour <- rgb(red=as.integer(red_new)/255, green=as.integer(green_new)/255, blue=as.integer(blue_new)/255)
+      new_colour
+    }
   }
 
   circos_data$tier_section <- circos_data[[segment_names_column]]
@@ -141,7 +186,7 @@ circos_protein_plot_segment <- function(circos_data,
                              xlim = circlize::get.cell.meta.data("xlim")
                              ylim = circlize::get.cell.meta.data("ylim")
                              circlize::circos.rect(xlim[1], ylim[1], xlim[2], ylim[2], border = NA,
-                                                   col = custom_pallet[i])
+                                                   col = custom_palette[i])
 
 
                              circlize::circos.axis(
@@ -151,20 +196,21 @@ circos_protein_plot_segment <- function(circos_data,
                                major.tick = F,
                                sector.index = circlize::get.current.sector.index(),
                                track.index = circlize::get.current.track.index(),
-                               col = 'grey30')
+                               col = lighten_or_darken_value(custom_palette[i]))
 
                              circlize::circos.points(
                                x=get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) -0.5,
                                y=get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(y_value),
                                pch = 16,
-                               cex = .5)
+                               cex = .5,
+                               col = colour_contrast_checker(custom_palette[i]))
 
                              circlize::circos.segments(
                                x0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) -0.5,
                                y0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(lo_ci95),
                                x1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) -0.5,
                                y1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(up_ci95),
-                               col = "black",
+                               col = colour_contrast_checker(custom_palette[i]),
                                straight = T)
 
                              if(error_bar_ends == T) {
@@ -173,7 +219,7 @@ circos_protein_plot_segment <- function(circos_data,
                                  x0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) - 0.5 +0.05,
                                  y1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(lo_ci95),
                                  x1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) - 0.5 -0.05,
-                                 col = "black",
+                                 col = colour_contrast_checker(custom_palette[i]),
                                  straight = T)
 
                                circlize::circos.segments(
@@ -181,7 +227,7 @@ circos_protein_plot_segment <- function(circos_data,
                                  x0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) - 0.5 +0.05,
                                  y1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(up_ci95),
                                  x1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) - 0.5 -0.05,
-                                 col = "black",
+                                 col = colour_contrast_checker(custom_palette[i]),
                                  straight = T)
                              }
                              circlize::circos.yaxis(
