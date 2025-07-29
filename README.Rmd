@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 # circos.triangulate <img src="images/circos-triangulate-icon.png" align="right" height="138"/></a>
 
-`circos.triangulate` is build from the [`Circlize`](https://github.com/jokergoo/circlize) package to allow for easy visualisation of large numbers of protein analyses, with triangulated data in mind, allowing each different source to be displayed as a different track. Automatic resizing occurs to ensure tracks are displayed clearly, with custom options such as generating odds ratios where a beta and standard error column are given, choosing which set of data is displayed as the primary (1st) track and dealing with missing data. Custom colour palettes now support dark colours, light points and error bars will automatically be applied when the track colour is dark. 
+`circos.triangulate` is build from the [`Circlize`](https://github.com/jokergoo/circlize) package to allow for easy visualisation of large numbers of protein analyses, with triangulated data in mind, allowing each different source to be displayed as a different track. Automatic resizing occurs to ensure tracks are displayed clearly, with custom options such as generating odds ratios where a beta and standard error column are given, choosing which set of data is displayed as the primary (1st) track and dealing with missing data. Custom colour palettes now support dark colours, light points and error bars will automatically be applied when the track colour is dark.
 
 To ensure the expected outcome data should be formatted in a `data.frame` as in the example below.
 
@@ -113,4 +113,4 @@ circos_protein_plot_segment(circos_data = sample_data, # data.table containing a
 
 -   Colour coded key for data sources
 
--   Zoomed segment plot ☑️
+-   ~~Zoomed segment plot~~ ☑️

@@ -16,14 +16,14 @@ colour is dark.
 To ensure the expected outcome data should be formatted in a
 `data.frame` as in the example below.
 
-    #>   protein disease           method           b          se track_id   segment
-    #> 1       a  cancer  Direct Measures -0.61290488 0.002226635        3 segment 1
-    #> 2       b  cancer  Direct Measures  0.65004203 0.043670841        3 segment 2
-    #> 3       a  cancer Reverse MR (IVW) -0.02225381 0.021064356        1 segment 1
-    #> 4       b  cancer Reverse MR (IVW)  0.01836475 0.027165103        1 segment 2
-    #> 5       a  cancer Forward MR (IVW) -0.49638006 0.028323388        2 segment 1
-    #> 6       a  cancer   Other Analysis -1.86933635 0.022961031        4 segment 1
-    #> 7       b  cancer   Other Analysis -1.31392950 0.012079965        4 segment 2
+    #>   protein disease           method          b          se track_id   segment
+    #> 1       a  cancer  Direct Measures -0.4429105 0.009726155        3 segment 1
+    #> 2       b  cancer  Direct Measures  0.6331609 0.046154340        3 segment 2
+    #> 3       a  cancer Reverse MR (IVW) -0.1180554 0.014960235        1 segment 1
+    #> 4       b  cancer Reverse MR (IVW) -0.1207263 0.035738426        1 segment 2
+    #> 5       b  cancer Forward MR (IVW) -0.6255388 0.040247733        2 segment 2
+    #> 6       a  cancer   Other Analysis -0.3483583 0.046529671        4 segment 1
+    #> 7       b  cancer   Other Analysis  1.9579365 0.034184909        4 segment 2
 
 To generate a `circos.triangulate` plot follow the example below:
 
@@ -75,4 +75,4 @@ circos_protein_plot_segment(circos_data = sample_data, # data.table containing a
 
 - Colour coded key for data sources
 
-- Zoomed segment plot ☑️
+- ~~Zoomed segment plot~~ ☑️
