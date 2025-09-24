@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 To ensure the expected outcome data should be formatted in a `data.frame` as in the example below.
 
 ```{r message=FALSE, warning=FALSE}
-library(tidyverse)
+library(dplyr)
 n_values <- 50
 letters52 <- c(letters,paste0(letters, letters))
 proteins <- letters52[1:50]
@@ -28,28 +28,28 @@ sample_reverse_mr <- data.frame(protein = proteins,
                                 disease = rep("cancer", n_values),
                                 method = rep("Reverse MR (IVW)", n_values),
                                 b = runif(n=n_values, min=-0.121555, max=0.07898039),
-                                se = runif(n=n_values, min=-0.001254849, max=0.04765049),
+                                se = runif(n=n_values, min=-0.01254849, max=1.04765049),
                                 track_id = 1)
 
 sample_forward_mr <- data.frame(protein = proteins,
                                 disease = rep("cancer", n_values),
                                 method = rep("Forward MR (IVW)", n_values),
                                 b = runif(n=n_values, min=-0.6876041, max=0.3437124),
-                                se = runif(n=n_values, min=-0.001254849, max=0.04765049),
+                                se = runif(n=n_values, min=0.01254849, max=1.04765049),
                                 track_id = 2)
 
 sample_obvs <- data.frame(protein = proteins,
                           disease = rep("cancer", n_values),
                           method = rep("Direct Measures", n_values),
                           b = runif(n=n_values, min=-1, max=1),
-                          se = runif(n=n_values, min=-0.001254849, max=0.04765049),
+                          se = runif(n=n_values, min=0.01254849, max=1.04765049),
                           track_id = 3)
 
 sample_other <- data.frame(protein = proteins,
                           disease = rep("cancer", n_values),
                           method = rep("Other Analysis", n_values),
                           b = runif(n=n_values, min=-2, max=2),
-                          se = runif(n=n_values, min=-0.001254849, max=0.04765049),
+                          se = runif(n=n_values, min=-0.01254849, max=1.04765049),
                           track_id = 4)
 
 
@@ -79,13 +79,16 @@ circos_protein_plot(circos_data = sample_data, # data.table containing all of th
                     primary_track = "1", # variable from "track_id_column" to determine which track is first to plot and used to generate names
                     segment_names_column = "segment", # column containing factor to subset data on
                     # optional
-                    odds_ratios = TRUE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
+                    odds_ratios = FALSE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
                     error_bar_ends = TRUE, # boolean value, whether to add ends to error bars (default = T)
-                    custom_palette = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour palette, supports viridis or custom vector
+                    custom_palette = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF"), # provide custom colour palette, supports viridis or custom vector
+                    axis_label_size = 1, # numerical value for axis label font size
+                    text_size = 2, # numerical value for protein name text size
+                    point_size = 1 # numerical value for point size
                     )
 ```
 
-# <img src="images/example_circos.png" align="centre"/>
+# <img src="images/example_circos_new.png" align="centre"/>
 
 ## Segment circos plot
 
@@ -101,16 +104,24 @@ circos_protein_plot_segment(circos_data = sample_data, # data.table containing a
                     segment_names_column = "segment", # column containing factor to subset data on
                     segment_to_display = "segment 1", # segment to zoom in on
                     # optional
-                    odds_ratios = TRUE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
+                    odds_ratios = FALSE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
                     error_bar_ends = TRUE, # boolean value, whether to add ends to error bars (default = T)
-                    custom_palette = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour palette, supports viridis or custom vector
+                    custom_palette = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF"), # provide custom colour palette, supports viridis or custom vector
+                    axis_label_size = 1, # numerical value for axis label font size
+                    text_size = 3, # numerical value for protein name text size
+                    point_size = 2 # numerical value for point size
                     )
+
 ```
 
-# <img src="images/example_circos_segment.png" align="centre"/>
+# <img src="images/example_circos_segment_new.png" align="centre"/>
 
 ## Future Updates
 
 -   Colour coded key for data sources
 
+-   Highlight selected proteins across all tracks
+
 -   ~~Zoomed segment plot~~ ☑️
+
+-   ~~Custom text and point size~~ ☑️

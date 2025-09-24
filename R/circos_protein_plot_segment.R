@@ -14,6 +14,9 @@ devtools::install_deps(dependencies = TRUE)
 #' @param odds_ratios (optional) boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
 #' @param error_bar_ends (optional) boolean value, whether to add ends to error bars (default = TRUE)
 #' @param custom_palette provide custom colour palette, supports viridis or custom vector
+#' @param axis_label_size (optional) custom label size for axis
+#' @param text_size (optional) custom text size for outer labels
+#' @param point_size (optional) custom size for points on plots
 #'
 #' @export circos_protein_plot_segment
 circos_protein_plot_segment <- function(circos_data,
@@ -27,7 +30,10 @@ circos_protein_plot_segment <- function(circos_data,
                                 odds_ratios,
                                 custom_palette,
                                 primary_track,
-                                error_bar_ends) {
+                                error_bar_ends,
+                                axis_label_size,
+                                text_size,
+                                point_size) {
   if(missing(primary_track)) {
     primary_track <- 1
   }
@@ -41,6 +47,18 @@ circos_protein_plot_segment <- function(circos_data,
   }
   if(missing(error_bar_ends)) {
     error_bar_ends <- T
+  }
+
+  if(missing(axis_label_size)) {
+    axis_label_size = 0.5
+  }
+
+  if(missing(text_size)) {
+    text_size = 1.5
+  }
+
+  if(missing(point_size)) {
+    point_size = 1
   }
   ### determine if colour is dark or light for chosing point colour
 
@@ -171,7 +189,7 @@ circos_protein_plot_segment <- function(circos_data,
                                      chr = circlize::get.cell.meta.data("sector.index")
                                      xlim = circlize::get.cell.meta.data("xlim")
                                      ylim = circlize::get.cell.meta.data("ylim")
-                                     circlize::circos.text(circos_data_track_main$order -0.5, mean(ylim), sector.index = get.current.sector.index(), labels = circos_data_track_main %>% filter(tier_section == chr) %>% pull(protein), facing = "clockwise", niceFacing = TRUE, adj=0.1, cex = 1, col = 'black')
+                                     circlize::circos.text(circos_data_track_main$order -0.5, mean(ylim), sector.index = circlize::get.current.sector.index(), labels = circos_data_track_main %>% filter(tier_section == chr) %>% pull(protein), facing = "clockwise", niceFacing = TRUE, adj=0.1, cex = text_size/1.1, col = 'black')
                                    }, bg.border = NA)
   )
 
@@ -184,7 +202,7 @@ circos_protein_plot_segment <- function(circos_data,
                                      circlize::circos.rect(xlim[1], 0, xlim[2], 1, border = NA,
                                                            col = 'grey80')
                                      circlize::circos.text(mean(xlim), mean(ylim)*1.2, chr,
-                                                           cex = 1, facing = "bending.outside", niceFacing = TRUE,
+                                                           cex = text_size, facing = "bending.outside", niceFacing = TRUE,
                                                            col = col_text)
                                    }, bg.border = NA)
 
@@ -208,13 +226,14 @@ circos_protein_plot_segment <- function(circos_data,
                                major.tick = F,
                                sector.index = circlize::get.current.sector.index(),
                                track.index = circlize::get.current.track.index(),
-                               col = lighten_or_darken_value(custom_palette[i]))
+                               col = lighten_or_darken_value(custom_palette[i]),
+                               lwd = point_size*2)
 
                              circlize::circos.points(
                                x=get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) -0.5,
                                y=get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(y_value),
                                pch = 16,
-                               cex = .5,
+                               cex = point_size,
                                col = colour_contrast_checker(custom_palette[i]))
 
                              circlize::circos.segments(
@@ -223,7 +242,8 @@ circos_protein_plot_segment <- function(circos_data,
                                x1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) -0.5,
                                y1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(up_ci95),
                                col = colour_contrast_checker(custom_palette[i]),
-                               straight = T)
+                               straight = T,
+                               lwd = point_size*1.5)
 
                              if(error_bar_ends == T) {
                                circlize::circos.segments(
@@ -232,7 +252,8 @@ circos_protein_plot_segment <- function(circos_data,
                                  y1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(lo_ci95),
                                  x1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) - 0.5 -0.05,
                                  col = colour_contrast_checker(custom_palette[i]),
-                                 straight = T)
+                                 straight = T,
+                                 lwd = point_size*1.5)
 
                                circlize::circos.segments(
                                  y0 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(up_ci95),
@@ -240,14 +261,15 @@ circos_protein_plot_segment <- function(circos_data,
                                  y1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(up_ci95),
                                  x1 = get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) - 0.5 -0.05,
                                  col = colour_contrast_checker(custom_palette[i]),
-                                 straight = T)
+                                 straight = T,
+                                 lwd = point_size*1.5)
                              }
                              circlize::circos.yaxis(
                                side = "left",
                                at = NULL,
                                labels = TRUE,
                                tick = TRUE,
-                               labels.cex = .4,
+                               labels.cex = axis_label_size,
                                tick.length = 0.2,
                                labels.niceFacing = T
                              )}, bg.border = NA)

@@ -16,14 +16,14 @@ colour is dark.
 To ensure the expected outcome data should be formatted in a
 `data.frame` as in the example below.
 
-    #>   protein disease           method          b          se track_id   segment
-    #> 1       a  cancer  Direct Measures -0.4429105 0.009726155        3 segment 1
-    #> 2       b  cancer  Direct Measures  0.6331609 0.046154340        3 segment 2
-    #> 3       a  cancer Reverse MR (IVW) -0.1180554 0.014960235        1 segment 1
-    #> 4       b  cancer Reverse MR (IVW) -0.1207263 0.035738426        1 segment 2
-    #> 5       b  cancer Forward MR (IVW) -0.6255388 0.040247733        2 segment 2
-    #> 6       a  cancer   Other Analysis -0.3483583 0.046529671        4 segment 1
-    #> 7       b  cancer   Other Analysis  1.9579365 0.034184909        4 segment 2
+    #>   protein disease           method           b        se track_id   segment
+    #> 1       a  cancer  Direct Measures  0.10533322 0.1019185        3 segment 1
+    #> 2       b  cancer  Direct Measures  0.38317482 0.1583848        3 segment 2
+    #> 3       a  cancer Reverse MR (IVW) -0.05590528 0.5459291        1 segment 1
+    #> 4       b  cancer Reverse MR (IVW) -0.07947019 0.4849857        1 segment 2
+    #> 5       b  cancer Forward MR (IVW) -0.34075298 0.3681368        2 segment 2
+    #> 6       a  cancer   Other Analysis -0.04082411 0.8017968        4 segment 1
+    #> 7       b  cancer   Other Analysis -1.70793436 1.0135530        4 segment 2
 
 To generate a `circos.triangulate` plot follow the example below:
 
@@ -41,13 +41,16 @@ circos_protein_plot(circos_data = sample_data, # data.table containing all of th
                     primary_track = "1", # variable from "track_id_column" to determine which track is first to plot and used to generate names
                     segment_names_column = "segment", # column containing factor to subset data on
                     # optional
-                    odds_ratios = TRUE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
+                    odds_ratios = FALSE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
                     error_bar_ends = TRUE, # boolean value, whether to add ends to error bars (default = T)
-                    custom_palette = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour palette, supports viridis or custom vector
+                    custom_palette = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF"), # provide custom colour palette, supports viridis or custom vector
+                    axis_label_size = 1, # numerical value for axis label font size
+                    text_size = 2, # numerical value for protein name text size
+                    point_size = 1 # numerical value for point size
                     )
 ```
 
-# <img src="images/example_circos.png" align="centre"/>
+# <img src="images/example_circos_new.png" align="centre"/>
 
 ## Segment circos plot
 
@@ -63,16 +66,23 @@ circos_protein_plot_segment(circos_data = sample_data, # data.table containing a
                     segment_names_column = "segment", # column containing factor to subset data on
                     segment_to_display = "segment 1", # segment to zoom in on
                     # optional
-                    odds_ratios = TRUE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
+                    odds_ratios = FALSE, # boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)
                     error_bar_ends = TRUE, # boolean value, whether to add ends to error bars (default = T)
-                    custom_palette = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF") # provide custom colour palette, supports viridis or custom vector
+                    custom_palette = c("#FEC98DFF", "#FD9567FF", "#F1605DFF", "#CD4071FF"), # provide custom colour palette, supports viridis or custom vector
+                    axis_label_size = 1, # numerical value for axis label font size
+                    text_size = 3, # numerical value for protein name text size
+                    point_size = 2 # numerical value for point size
                     )
 ```
 
-# <img src="images/example_circos_segment.png" align="centre"/>
+# <img src="images/example_circos_segment_new.png" align="centre"/>
 
 ## Future Updates
 
 - Colour coded key for data sources
 
+- Highlight selected proteins across all tracks
+
 - ~~Zoomed segment plot~~ ☑️
+
+- ~~Custom text and point size~~ ☑️
