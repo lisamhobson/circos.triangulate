@@ -33,7 +33,10 @@ circos_protein_plot_segment <- function(circos_data,
                                 error_bar_ends,
                                 axis_label_size,
                                 text_size,
-                                point_size) {
+                                point_size,
+                                highlights,
+                                highlight_prots,
+                                highlight_colour) {
   if(missing(primary_track)) {
     primary_track <- 1
   }
@@ -60,6 +63,10 @@ circos_protein_plot_segment <- function(circos_data,
   if(missing(point_size)) {
     point_size = 1
   }
+  if(missing(highlights)) {
+    highlights = F
+  }
+
   ### determine if colour is dark or light for chosing point colour
 
   colour_contrast_checker <- function(colour) {
@@ -146,7 +153,7 @@ circos_protein_plot_segment <- function(circos_data,
 
   }
   if (odds_ratios == F) {
-    y_value <- "b"
+    y_value <- beta_column
 
     circos_data$lo_ci95 <- circos_data[[beta_column]] - 1.96 * circos_data[[se_column]]
     circos_data$up_ci95 <- circos_data[[beta_column]] + 1.96 * circos_data[[se_column]]
@@ -273,5 +280,29 @@ circos_protein_plot_segment <- function(circos_data,
                                tick.length = 0.2,
                                labels.niceFacing = T
                              )}, bg.border = NA)
+  }
+  if(highlights == TRUE) {
+
+    if(missing(highlight_colour)) {
+      highlight_colour = paste0(lighten_or_darken_value(custom_palette[1]), 80)
+    } else {
+      if(nchar(highlight_colour) < 9) {
+        highlight_colour = paste0(lighten_or_darken_value(highlight_colour), 80)
+      } else {
+        highlight_colour <- strsplit(highlight_colour, "FF") %>% paste0("80")
+      }}
+
+    circos_data_track_main$start.angle = seq((90/(length(circos_data_track_main$x)+1)), 90, length.out=length(circos_data_track_main$x))[length(circos_data_track_main$x):1]+0.25
+    circos_data_track_main$end.angle = (circos_data_track_main$start.angle)-(90/(length(circos_data_track_main$protein)+1))
+
+    for(h in highlight_prots) {
+      circlize::draw.sector(
+        start.degree = circos_data_track_main$start.angle[grep(h, circos_data_track_main$protein)],
+        end.degree = circos_data_track_main$end.angle[grep(h, circos_data_track_main$protein)],
+        rou1 = 1.1,
+        rou2 = 0.15,
+        col = highlight_colour,
+        border = NA)
+    }
   }
 }
