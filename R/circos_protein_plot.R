@@ -145,7 +145,7 @@ circos_protein_plot <- function(circos_data,
 
   }
   if (odds_ratios == F) {
-    y_value <- "b"
+    y_value <- beta_column
 
     circos_data$lo_ci95 <- circos_data[[beta_column]] - 1.96 * circos_data[[se_column]]
     circos_data$up_ci95 <- circos_data[[beta_column]] + 1.96 * circos_data[[se_column]]
