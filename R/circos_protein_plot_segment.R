@@ -17,7 +17,8 @@ devtools::install_deps(dependencies = TRUE)
 #' @param axis_label_size (optional) custom label size for axis
 #' @param text_size (optional) custom text size for outer labels
 #' @param point_size (optional) custom size for points on plots
-#'
+#' @param add_legend add in track legend (default = FALSE)
+#' @param track_name_column (optional) column containing track names (default = uses track_id_column)
 #' @export circos_protein_plot_segment
 circos_protein_plot_segment <- function(circos_data,
                                 total_track_number,
@@ -34,6 +35,8 @@ circos_protein_plot_segment <- function(circos_data,
                                 axis_label_size,
                                 text_size,
                                 point_size,
+                                add_legend = FALSE,
+                                track_name_column = track_id_column,
                                 highlights,
                                 highlight_prots,
                                 highlight_colour) {
@@ -117,6 +120,7 @@ circos_protein_plot_segment <- function(circos_data,
   circos_data <- circos_data %>% filter(tier_section == segment_to_display)
   circos_data$protein <- circos_data[[protein_column]]
   circos_data$track_id <- circos_data[[track_id_column]]
+  circos_data$track_names <- circos_data[[track_name_column]]
 
   if(missing(primary_track)) {
     primary_track <- as.factor(circos_data$track_id)[1]
@@ -181,6 +185,7 @@ circos_protein_plot_segment <- function(circos_data,
     circos_data_track_main$ncat[i] <- circos_data_track_main$x[i]/circos_data_track_main$n[i]
   }
 
+  legend_names <- vector()
 
   circlize::circos.clear()
   col_text <- "grey40"
@@ -214,6 +219,7 @@ circos_protein_plot_segment <- function(circos_data,
                                    }, bg.border = NA)
 
   for(i in 1:total_track_number) {
+    legend_names[i] <- circos_data$track_names[circos_data$track_id == i] %>% unique()
     assign(paste0("circos_data_track", i), circos_data %>% filter(track_id == i) %>% merge(circos_data_track_main[c("protein", "x", "order", "n","ncat", "tier_section")]))
 
     circlize::circos.track(factors = circos_data$tier_section,
@@ -224,7 +230,6 @@ circos_protein_plot_segment <- function(circos_data,
                              ylim = circlize::get.cell.meta.data("ylim")
                              circlize::circos.rect(xlim[1], ylim[1], xlim[2], ylim[2], border = NA,
                                                    col = custom_palette[i])
-
 
                              circlize::circos.axis(
                                h = null,
@@ -305,4 +310,23 @@ circos_protein_plot_segment <- function(circos_data,
         border = NA)
     }
   }
+  if(add_legend == TRUE) {
+    plot_legend <-
+      ComplexHeatmap::Legend(labels = legend_names[1:total_track_number],
+                             legend_gp = grid::gpar(fill = custom_palette[1:total_track_number]),
+                             title = "Tracks",
+                             grid_height = grid::unit(point_size/1.8, "cm"),
+                             grid_width = grid::unit(point_size/1.8, "cm"),
+                             labels_gp = gpar(fontsize = text_size*5),
+                             title_gp = gpar(fontsize = text_size*5,
+                                             fontface = "bold"),
+                             gap = unit(point_size/2, "cm"))
+
+    ComplexHeatmap::draw(plot_legend,
+                         x = grid::unit(point_size/100, "npc"),
+                         y = grid::unit(point_size/100, "npc"),
+                         just = c("left", "bottom"),
+                         test=F)
+  }
 }
+

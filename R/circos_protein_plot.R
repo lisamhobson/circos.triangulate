@@ -22,6 +22,8 @@
 #' @param axis_label_size (optional) custom label size for axis
 #' @param text_size (optional) custom text size for outer labels
 #' @param point_size (optional) custom size for points on plots
+#' @param add_legend add in track legend (default = FALSE)
+#' @param track_name_column (optional) column containing track names (default = uses track_id_column)
 #' @export
 circos_protein_plot <- function(circos_data,
                                 total_track_number,
@@ -30,36 +32,18 @@ circos_protein_plot <- function(circos_data,
                                 protein_column,
                                 beta_column,
                                 se_column,
-                                odds_ratios,
-                                custom_palette,
-                                primary_track,
-                                error_bar_ends,
-                                axis_label_size,
-                                text_size,
-                                point_size) {
+                                odds_ratios = FALSE,
+                                custom_palette = viridis::viridis(n = total_track_number+5)[total_track_number+5:1],
+                                primary_track = 1,
+                                error_bar_ends = TRUE,
+                                axis_label_size = 0.5,
+                                text_size = 1.5,
+                                point_size = 1,
+                                add_legend = FALSE,
+                                track_name_column = track_id_column
+                                ) {
 
-  if(missing(custom_palette)) {
-    custom_palette <- viridis::viridis(n = total_track_number+5)[total_track_number+5:1]
-  }
 
-  if(missing(odds_ratios)) {
-    odds_ratios <- F
-  }
-  if(missing(error_bar_ends)) {
-    error_bar_ends <- T
-  }
-
-  if(missing(axis_label_size)) {
-    axis_label_size = 0.5
-  }
-
-  if(missing(text_size)) {
-    text_size = 1.5
-  }
-
-  if(missing(point_size)) {
-    point_size = 1
-  }
   ### determine if colour is dark or light for chosing point colour
 
   colour_contrast_checker <- function(colour) {
@@ -109,6 +93,7 @@ circos_protein_plot <- function(circos_data,
   circos_data$tier_section <- circos_data[[segment_names_column]]
   circos_data$protein <- circos_data[[protein_column]]
   circos_data$track_id <- circos_data[[track_id_column]]
+  circos_data$track_names <- circos_data[[track_name_column]]
 
   if(missing(primary_track)) {
     primary_track <- as.factor(circos_data$track_id)[1]
@@ -173,6 +158,8 @@ circos_protein_plot <- function(circos_data,
     circos_data_track_main$ncat[i] <- circos_data_track_main$x[i]/circos_data_track_main$n[i]
   }
 
+  legend_names <- vector()
+
   circlize::circos.clear()
   col_text <- "grey40"
 
@@ -204,6 +191,7 @@ circos_protein_plot <- function(circos_data,
                                    }, bg.border = NA)
 
   for(i in 1:total_track_number) {
+    legend_names[i] <- circos_data$track_names[circos_data$track_id == i] %>% unique()
     assign(paste0("circos_data_track", i), circos_data %>% filter(track_id == i) %>% merge(circos_data_track_main[c("protein", "x", "order", "n","ncat", "tier_section")]))
 
     circlize::circos.track(factors = circos_data$tier_section,
@@ -271,4 +259,22 @@ circos_protein_plot <- function(circos_data,
                                labels.niceFacing = T
                              )}, bg.border = NA)
   }
+if(add_legend == TRUE) {
+  plot_legend <-
+    ComplexHeatmap::Legend(labels = legend_names[1:total_track_number],
+                           legend_gp = grid::gpar(fill = custom_palette[1:total_track_number]),
+                           title = "Tracks",
+                           grid_height = grid::unit(point_size, "cm"),
+                           grid_width = grid::unit(point_size, "cm"),
+                           labels_gp = gpar(fontsize = text_size*15),
+                           title_gp = gpar(fontsize = text_size*15,
+                                           fontface = "bold"),
+                           gap = unit(point_size/2, "cm"))
+
+  ComplexHeatmap::draw(plot_legend,
+                       x = grid::unit(point_size/100, "npc"),
+                       y = grid::unit(point_size/100, "npc"),
+                       just = c("left", "bottom"),
+                       test=F)
+}
 }

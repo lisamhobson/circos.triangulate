@@ -16,14 +16,15 @@ colour is dark.
 To ensure the expected outcome data should be formatted in a
 `data.frame` as in the example below.
 
-    #>   protein disease           method           b         se track_id   segment
-    #> 1       a  cancer  Direct Measures -0.47112647 0.31271615        3 segment 1
-    #> 2       b  cancer  Direct Measures -0.29714968 0.82816935        3 segment 2
-    #> 3       a  cancer Reverse MR (IVW) -0.06311827 0.96892441        1 segment 1
-    #> 4       b  cancer Reverse MR (IVW) -0.00256487 0.23452589        1 segment 2
-    #> 5       b  cancer Forward MR (IVW)  0.15448639 0.07937798        2 segment 2
-    #> 6       a  cancer   Other Analysis  1.37469200 0.67877119        4 segment 1
-    #> 7       b  cancer   Other Analysis -0.43389588 0.35856626        4 segment 2
+    #>   protein disease           method           b        se track_id   segment
+    #> 1       a  cancer  Direct Measures  0.49670705 0.6696840        3 segment 1
+    #> 2       b  cancer  Direct Measures  0.34374961 0.9932086        3 segment 2
+    #> 3       a  cancer Reverse MR (IVW)  0.05441826 0.8628862        1 segment 1
+    #> 4       b  cancer Reverse MR (IVW) -0.01028641 0.3309340        1 segment 2
+    #> 5       b  cancer Forward MR (IVW) -0.20916775 0.2089879        2 segment 2
+    #> 6       a  cancer Forward MR (IVW) -0.50549318 1.0450722        2 segment 1
+    #> 7       a  cancer   Other Analysis -1.31432022 0.8920552        4 segment 1
+    #> 8       b  cancer   Other Analysis -0.05066045 0.2613452        4 segment 2
 
 To generate a `circos.triangulate` plot follow the example below:
 
@@ -47,13 +48,12 @@ circos_protein_plot(circos_data = sample_data, # data.table containing all of th
                     axis_label_size = 1, # numerical value for axis label font size
                     text_size = 2, # numerical value for protein name text size
                     point_size = 1, # numerical value for point size
-                    highlights = TRUE, # boolean value, whether to highlight specific proteins across tracks 
-                    highlight_prots = c("a", "u", "ee"), # names of proteins to highlight, must be in protein_column
-                    highlight_colour = "#F1605DFF" # colour to use for highlights, opacity is added automatically 
+                    add_legend = TRUE, # boolean value, add legend to bottom, left of plot for track colours
+                    track_name_column = "method" # supply custom names to legend, (default = use track_id_column)
                     )
 ```
 
-# <img src="images/example_circos_new.png" align="centre"/>
+# <img src="images/with_legend.png" align="centre"/>
 
 ## Segment circos plot
 
@@ -75,10 +75,12 @@ circos_protein_plot_segment(circos_data = sample_data, # data.table containing a
                     axis_label_size = 1, # numerical value for axis label font size
                     text_size = 3, # numerical value for protein name text size
                     point_size = 2, # numerical value for point size
+                    add_legend = TRUE, # boolean value, add legend to bottom, left of plot for track colours
+                    track_name_column = "method" # supply custom names to legend, (default = use track_id_column)
                     )
 ```
 
-# <img src="images/example_circos_segment_new.png" align="centre"/>
+# <img src="images/with_legend_segment.png" align="centre"/>
 
 ### With highlights
 
@@ -102,18 +104,22 @@ circos_protein_plot_segment(circos_data = sample_data, # data.table containing a
                     point_size = 2, # numerical value for point size
                     highlights = TRUE, # boolean value, whether to highlight specific proteins across tracks 
                     highlight_prots = c("a", "u", "ee"), # names of proteins to highlight, must be in protein_column
-                    highlight_colour = "#F1605DFF" # colour to use for highlights, opacity is added automatically 
+                    highlight_colour = "#F1605DFF", # colour to use for highlights, opacity is added automatically 
+                    add_legend = TRUE, # boolean value, add legend to bottom, left of plot for track colours
+                    track_name_column = "method" # supply custom names to legend, (default = use track_id_column)
                     )
 ```
 
-# <img src="images/example_circos_segment_highlight.png" align="centre"/>
+# <img src="images/with_legend_segment_highlight.png" align="centre"/>
 
 ## Future Updates
 
-- Colour coded key for data sources
+- ~~Colour coded key for data sources~~ ☑️
 
 - ~~Highlight selected proteins across all tracks~~ ☑️
 
 - ~~Zoomed segment plot~~ ☑️
 
 - ~~Custom text and point size~~ ☑️
+
+- Multi-coloured highlighting and legend for highlights
