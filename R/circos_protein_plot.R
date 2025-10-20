@@ -215,10 +215,10 @@ circos_protein_plot <- function(circos_data,
 
 
                              if(i == no_odds_ratio_track) {
-                               null == 0
+                               null = 0
                              }
                              else {
-                               null == 1
+                               null = 1
                              }
                              circlize::circos.axis(
                                h = null,
@@ -231,10 +231,10 @@ circos_protein_plot <- function(circos_data,
                                lwd = point_size*2)
 
                              if(i == no_odds_ratio_track){
-                               y_value == beta_column
+                               y_value = beta_column
                              }
                              else{
-                               y_value == "or"
+                               y_value = "or"
                              }
                              circlize::circos.points(
                                x=get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) -0.5,
