@@ -216,8 +216,7 @@ circos_protein_plot <- function(circos_data,
 
                              if(i == no_odds_ratio_track) {
                                null <- 0
-                             }
-                             else {
+                             } else {
                                null <- 1
                              }
                              circlize::circos.axis(
