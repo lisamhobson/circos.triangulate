@@ -266,8 +266,8 @@ circos_protein_plot <- function(circos_data,
                              title = "Tracks",
                              grid_height = grid::unit(point_size, "cm"),
                              grid_width = grid::unit(point_size, "cm"),
-                             labels_gp = gpar(fontsize = text_size*15),
-                             title_gp = gpar(fontsize = text_size*15,
+                             labels_gp = grid::gpar(fontsize = text_size*15),
+                             title_gp = grid::gpar(fontsize = text_size*15,
                                              fontface = "bold"),
                              gap = unit(point_size/2, "cm"))
 
