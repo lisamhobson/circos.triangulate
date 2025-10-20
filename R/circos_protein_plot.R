@@ -8,6 +8,7 @@
 #' @import dplyr
 #' @import data.table
 #' @import viridis
+#' @import grid
 #' @param circos_data data.table containing all of the data to plot
 #' @param total_track_number total number of tracks to plot (can be less than sources of data if only plotting subset)
 #' @param track_id_column name of column containing variable to determine which track e.g. method / data source
@@ -33,6 +34,7 @@ circos_protein_plot <- function(circos_data,
                                 beta_column,
                                 se_column,
                                 odds_ratios = FALSE,
+                                no_odds_ratio_track,
                                 custom_palette = viridis::viridis(n = total_track_number+5)[total_track_number+5:1],
                                 primary_track = 1,
                                 error_bar_ends = TRUE,
@@ -123,19 +125,27 @@ circos_protein_plot <- function(circos_data,
       return(data)
     }
 
-    circos_data <- generate_odds_ratios(circos_data)
+    for(track_no in no_odds_ratio_track) {
+      data_save <- circos_data %>% filter(track_id == track_no)
 
-    y_value <- "or"
-    null <- 1
+      data_save$lo_ci <- data_save[[beta_column]] - 1.96 * data_save[[se_column]]
+      data_save$up_ci <- data_save[[beta_column]] + 1.96 * data_save[[se_column]]
+
+      circos_data_odds <- generate_odds_ratios(circos_data)
+
+      circos_new <- circos_data_odds %>% filter(track_id != track_no)
+
+
+      circos_data <- full_join(circos_new, data_save)
+    }
+
+
 
   }
   if (odds_ratios == F) {
-    y_value <- beta_column
 
     circos_data$lo_ci95 <- circos_data[[beta_column]] - 1.96 * circos_data[[se_column]]
     circos_data$up_ci95 <- circos_data[[beta_column]] + 1.96 * circos_data[[se_column]]
-
-    null <- 0
 
   }
 
@@ -204,6 +214,12 @@ circos_protein_plot <- function(circos_data,
                                                    col = custom_palette[i])
 
 
+                             if(i == no_odds_ratio_track) {
+                               null == 0
+                             }
+                             else {
+                               null == 1
+                             }
                              circlize::circos.axis(
                                h = null,
                                major.at = NULL,
@@ -214,6 +230,12 @@ circos_protein_plot <- function(circos_data,
                                col = lighten_or_darken_value(custom_palette[i]),
                                lwd = point_size*2)
 
+                             if(i == no_odds_ratio_track){
+                               y_value == beta_column
+                             }
+                             else{
+                               y_value == "or"
+                             }
                              circlize::circos.points(
                                x=get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(x) -0.5,
                                y=get(paste0("circos_data_track", i)) %>% filter(tier_section == circlize::get.cell.meta.data("sector.index")) %>% pull(y_value),
@@ -266,8 +288,8 @@ if(add_legend == TRUE) {
                            title = "Tracks",
                            grid_height = grid::unit(point_size, "cm"),
                            grid_width = grid::unit(point_size, "cm"),
-                           labels_gp = gpar(fontsize = text_size*15),
-                           title_gp = gpar(fontsize = text_size*15,
+                           labels_gp = grid::gpar(fontsize = text_size*15),
+                           title_gp = grid::gpar(fontsize = text_size*15,
                                            fontface = "bold"),
                            gap = unit(point_size/2, "cm"))
 
