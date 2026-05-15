@@ -43,8 +43,6 @@ circos_protein_plot <- function(circos_data,
                                 track_name_column = track_id_column
 ) {
 
-  usethis::use_pipe()
-
   '%!in%' <- function(x, y) {
     ! ('%in%'(x, y))
   }
