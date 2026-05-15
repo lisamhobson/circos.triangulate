@@ -56,10 +56,10 @@ sample_other <- data.frame(protein = proteins,
 
 segment_data <- data.frame(protein = proteins, segment = rep(c("segment 1", "segment 2", "segment 3", "segment 4", "segment 5"), length(proteins)/5))
 
-sample_data <- rbind(sample_obvs, sample_reverse_mr, sample_forward_mr[as.integer(runif(n=50, min=1, max=n_values)) %>% unique(),], sample_other)
-sample_data <- sample_data %>% inner_join(segment_data)
+sample_data <- rbind(sample_obvs, sample_reverse_mr, sample_forward_mr[as.integer(runif(n=50, min=1, max=n_values)) |> unique(),], sample_other)
+sample_data <- sample_data |> dplyr::inner_join(segment_data)
 
-sample_data %>% filter(protein == "a" | protein == "b")
+sample_data |> filter(protein == "a" | protein == "b")
 
 ```
 

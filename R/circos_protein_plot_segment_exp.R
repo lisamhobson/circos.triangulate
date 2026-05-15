@@ -17,8 +17,8 @@
 #' @param point_size (optional) custom size for points on plots
 #' @param add_legend add in track legend (default = FALSE)
 #' @param track_name_column (optional) column containing track names (default = uses track_id_column)
-#' @export circos_protein_plot_segment
-circos_protein_plot_segment <- function(circos_data,
+#' @export circos_protein_plot_segment_exp
+circos_protein_plot_segment_exp <- function(circos_data,
                                 total_track_number,
                                 track_id_column,
                                 segment_names_column,
@@ -26,9 +26,9 @@ circos_protein_plot_segment <- function(circos_data,
                                 protein_column,
                                 beta_column,
                                 se_column,
-                                odds_ratios,
                                 custom_palette,
                                 primary_track,
+                                odds_ratios = NA,
                                 error_bar_ends,
                                 axis_label_size,
                                 text_size,
@@ -46,9 +46,6 @@ circos_protein_plot_segment <- function(circos_data,
     custom_palette <- viridis::viridis(n = total_track_number+5)[total_track_number+5:1]
   }
 
-  if(missing(odds_ratios)) {
-    odds_ratios <- F
-  }
   if(missing(error_bar_ends)) {
     error_bar_ends <- T
   }
@@ -137,32 +134,27 @@ circos_protein_plot_segment <- function(circos_data,
   col_text <- "grey"
 
 
-  if(odds_ratios == T) {
-    generate_odds_ratios <- function(data)
-    {
-      data$lo_ci <- data[[beta_column]] - 1.96 * data[[se_column]]
-      data$up_ci <- data[[beta_column]] + 1.96 * data[[se_column]]
-      data$or <- exp(data[[beta_column]])
-      data$lo_ci95 <- exp(data$lo_ci)
-      data$up_ci95 <- exp(data$up_ci)
-      return(data)
-    }
-
-    circos_data <- generate_odds_ratios(circos_data)
-
-    y_value <- "or"
-    null <- 1
-
+  generate_ci <- function(data)
+  {
+    data$lo_ci95 <- data[[beta_column]] - 1.96 * data[[se_column]]
+    data$up_ci95 <- data[[beta_column]] + 1.96 * data[[se_column]]
+    # data$or <- exp(data[[beta_column]])
+    # data$lo_ci95 <- exp(data$lo_ci)
+    # data$up_ci95 <- exp(data$up_ci)
+    return(data)
   }
-  if (odds_ratios == F) {
-    y_value <- beta_column
 
-    circos_data$lo_ci95 <- circos_data[[beta_column]] - 1.96 * circos_data[[se_column]]
-    circos_data$up_ci95 <- circos_data[[beta_column]] + 1.96 * circos_data[[se_column]]
-
-    null <- 0
-
+  generate_odds_ratios <- function(data)
+  {
+    data$lo_ci <- data[[beta_column]] - 1.96 * data[[se_column]]
+    data$up_ci <- data[[beta_column]] + 1.96 * data[[se_column]]
+    data$or <- exp(data[[beta_column]])
+    data$lo_or_ci95 <- exp(data$lo_ci)
+    data$up_or_ci95 <- exp(data$up_ci)
+    return(data)
   }
+
+  circos_data <- generate_ci(circos_data)
 
 
 
@@ -220,70 +212,146 @@ circos_protein_plot_segment <- function(circos_data,
     legend_names[i] <- circos_data$track_names[circos_data$track_id == i] |> unique()
     assign(paste0("circos_data_track", i), circos_data |> filter(track_id == i) |> merge(circos_data_track_main[c("protein", "x", "order", "n","ncat", "tier_section")]))
 
-    circlize::circos.track(factors = circos_data$tier_section,
-                           track.index = i+2, x = circos_data$ncat, ylim=c(min(get(paste0("circos_data_track", i))$lo_ci95), max(get(paste0("circos_data_track", i))$up_ci95)),
-                           track.height = 0.6/total_track_number, panel.fun = function(x, y) {
-                             chr = circlize::get.cell.meta.data("sector.index")
-                             xlim = circlize::get.cell.meta.data("xlim")
-                             ylim = circlize::get.cell.meta.data("ylim")
-                             circlize::circos.rect(xlim[1], ylim[1], xlim[2], ylim[2], border = NA,
-                                                   col = custom_palette[i])
 
-                             circlize::circos.axis(
-                               h = null,
-                               major.at = NULL,
-                               labels = F,
-                               major.tick = F,
-                               sector.index = circlize::get.current.sector.index(),
-                               track.index = circlize::get.current.track.index(),
-                               col = lighten_or_darken_value(custom_palette[i]),
-                               lwd = point_size*2)
+    if(i %in% odds_ratios) {
+      assign(paste0("circos_data_track", i), generate_odds_ratios(get(paste0("circos_data_track", i))))
 
-                             circlize::circos.points(
-                               x=get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) -0.5,
-                               y=get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(y_value),
-                               pch = 16,
-                               cex = point_size,
-                               col = colour_contrast_checker(custom_palette[i]))
+      circlize::circos.track(factors = circos_data$tier_section,
+                             track.index = i+2, x = circos_data$ncat, ylim=c(min(get(paste0("circos_data_track", i))$lo_or_ci95), max(get(paste0("circos_data_track", i))$up_or_ci95)),
+                             track.height = 0.6/total_track_number, panel.fun = function(x, y) {
+                               chr = circlize::get.cell.meta.data("sector.index")
+                               xlim = circlize::get.cell.meta.data("xlim")
+                               ylim = circlize::get.cell.meta.data("ylim")
+                               circlize::circos.rect(xlim[1], ylim[1], xlim[2], ylim[2], border = NA,
+                                                     col = custom_palette[i])
 
-                             circlize::circos.segments(
-                               x0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) -0.5,
-                               y0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(lo_ci95),
-                               x1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) -0.5,
-                               y1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(up_ci95),
-                               col = colour_contrast_checker(custom_palette[i]),
-                               straight = T,
-                               lwd = point_size*1.5)
 
-                             if(error_bar_ends == T) {
+                               circlize::circos.axis(
+                                 h = exp(0),
+                                 major.at = NULL,
+                                 labels = F,
+                                 major.tick = F,
+                                 sector.index = circlize::get.current.sector.index(),
+                                 track.index = circlize::get.current.track.index(),
+                                 col = lighten_or_darken_value(custom_palette[i]),
+                                 lwd = point_size*2)
+
+                               circlize::circos.points(
+                                 x=get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) -0.5,
+                                 y=get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(or),
+                                 pch = 16,
+                                 cex = point_size,
+                                 col = colour_contrast_checker(custom_palette[i]))
+
                                circlize::circos.segments(
+                                 x0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) -0.5,
+                                 y0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(lo_or_ci95),
+                                 x1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) -0.5,
+                                 y1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(up_or_ci95),
+                                 col = colour_contrast_checker(custom_palette[i]),
+                                 straight = T,
+                                 lwd = point_size*1.5)
+
+                               if(error_bar_ends == T) {
+                                 circlize::circos.segments(
+                                   y0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(lo_or_ci95),
+                                   x0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) - 0.5 +0.05,
+                                   y1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(lo_or_ci95),
+                                   x1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) - 0.5 -0.05,
+                                   col = colour_contrast_checker(custom_palette[i]),
+                                   straight = T,
+                                   lwd = point_size*1.5)
+
+                                 circlize::circos.segments(
+                                   y0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(up_or_ci95),
+                                   x0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) - 0.5 +0.05,
+                                   y1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(up_or_ci95),
+                                   x1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) - 0.5 -0.05,
+                                   col = colour_contrast_checker(custom_palette[i]),
+                                   straight = T,
+                                   lwd = point_size*1.5)
+                               }
+                               circlize::circos.yaxis(
+                                 side = "left",
+                                 at = c(0.5,0.75,1,1.25,1.5,2,5,10),
+                                 labels = TRUE,
+                                 tick = TRUE,
+                                 labels.cex = axis_label_size,
+                                 tick.length = 0.2,
+                                 labels.niceFacing = T
+                               )}, bg.border = NA)
+    }
+    if(i %!in% odds_ratios) {
+      assign(paste0("circos_data_track", i), generate_ci(get(paste0("circos_data_track", i))))
+      y_value = beta_column
+
+      circlize::circos.track(factors = circos_data$tier_section,
+                             track.index = i+2, x = circos_data$ncat, ylim=c(min(get(paste0("circos_data_track", i))$lo_ci95), max(get(paste0("circos_data_track", i))$up_ci95)),
+                             track.height = 0.6/total_track_number, panel.fun = function(x, y) {
+                               chr = circlize::get.cell.meta.data("sector.index")
+                               xlim = circlize::get.cell.meta.data("xlim")
+                               ylim = circlize::get.cell.meta.data("ylim")
+                               circlize::circos.rect(xlim[1], ylim[1], xlim[2], ylim[2], border = NA,
+                                                     col = custom_palette[i])
+
+
+                               circlize::circos.axis(
+                                 h = 0,
+                                 major.at = NULL,
+                                 labels = F,
+                                 major.tick = F,
+                                 sector.index = circlize::get.current.sector.index(),
+                                 track.index = circlize::get.current.track.index(),
+                                 col = lighten_or_darken_value(custom_palette[i]),
+                                 lwd = point_size*2)
+
+                               circlize::circos.points(
+                                 x=get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) -0.5,
+                                 y=get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(y_value),
+                                 pch = 16,
+                                 cex = point_size,
+                                 col = colour_contrast_checker(custom_palette[i]))
+
+                               circlize::circos.segments(
+                                 x0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) -0.5,
                                  y0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(lo_ci95),
-                                 x0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) - 0.5 +0.05,
-                                 y1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(lo_ci95),
-                                 x1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) - 0.5 -0.05,
+                                 x1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) -0.5,
+                                 y1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(up_ci95),
                                  col = colour_contrast_checker(custom_palette[i]),
                                  straight = T,
                                  lwd = point_size*1.5)
 
-                               circlize::circos.segments(
-                                 y0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(up_ci95),
-                                 x0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) - 0.5 +0.05,
-                                 y1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(up_ci95),
-                                 x1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) - 0.5 -0.05,
-                                 col = colour_contrast_checker(custom_palette[i]),
-                                 straight = T,
-                                 lwd = point_size*1.5)
-                             }
-                             circlize::circos.yaxis(
-                               side = "left",
-                               at = NULL,
-                               labels = TRUE,
-                               tick = TRUE,
-                               labels.cex = axis_label_size,
-                               tick.length = 0.2,
-                               labels.niceFacing = T
-                             )}, bg.border = NA)
+                               if(error_bar_ends == T) {
+                                 circlize::circos.segments(
+                                   y0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(lo_ci95),
+                                   x0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) - 0.5 +0.05,
+                                   y1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(lo_ci95),
+                                   x1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) - 0.5 -0.05,
+                                   col = colour_contrast_checker(custom_palette[i]),
+                                   straight = T,
+                                   lwd = point_size*1.5)
+
+                                 circlize::circos.segments(
+                                   y0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(up_ci95),
+                                   x0 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) - 0.5 +0.05,
+                                   y1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(up_ci95),
+                                   x1 = get(paste0("circos_data_track", i)) |> filter(tier_section == circlize::get.cell.meta.data("sector.index")) |> pull(x) - 0.5 -0.05,
+                                   col = colour_contrast_checker(custom_palette[i]),
+                                   straight = T,
+                                   lwd = point_size*1.5)
+                               }
+                               circlize::circos.yaxis(
+                                 side = "left",
+                                 at = NULL,
+                                 labels = TRUE,
+                                 tick = TRUE,
+                                 labels.cex = axis_label_size,
+                                 tick.length = 0.2,
+                                 labels.niceFacing = T
+                               )}, bg.border = NA)
+    }
   }
+
   if(highlights == TRUE) {
 
     if(missing(highlight_colour)) {
