@@ -16,7 +16,15 @@ circos_protein_plot_segment(
   odds_ratios,
   custom_palette,
   primary_track,
-  error_bar_ends
+  error_bar_ends,
+  axis_label_size,
+  text_size,
+  point_size,
+  add_legend = FALSE,
+  track_name_column = as.character(track_id_column),
+  highlights,
+  highlight_prots,
+  highlight_colour
 )
 }
 \arguments{
@@ -43,6 +51,16 @@ circos_protein_plot_segment(
 \item{primary_track}{variable from "track_id_column" to determine which track is first to plot and used to generate names}
 
 \item{error_bar_ends}{(optional) boolean value, whether to add ends to error bars (default = TRUE)}
+
+\item{axis_label_size}{(optional) custom label size for axis}
+
+\item{text_size}{(optional) custom text size for outer labels}
+
+\item{point_size}{(optional) custom size for points on plots}
+
+\item{add_legend}{add in track legend (default = FALSE)}
+
+\item{track_name_column}{(optional) column containing track names (default = uses track_id_column)}
 }
 \description{
 circos protein plot segment

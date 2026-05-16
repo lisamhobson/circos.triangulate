@@ -34,7 +34,7 @@ circos_protein_plot_segment <- function(circos_data,
                                 text_size,
                                 point_size,
                                 add_legend = FALSE,
-                                track_name_column = track_id_column,
+                                track_name_column = as.character(track_id_column),
                                 highlights,
                                 highlight_prots,
                                 highlight_colour) {

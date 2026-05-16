@@ -373,7 +373,7 @@ circos_protein_plot <- function(circos_data,
                          x = grid::unit(point_size/10, "cm"),
                          y = grid::unit(point_size/10, "cm"),
 
-                         # just = c("left", "bottom"),
+                         just = c("left", "bottom"),
                          # test=T
                          )
   }

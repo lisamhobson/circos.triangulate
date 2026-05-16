@@ -12,10 +12,15 @@ circos_protein_plot(
   protein_column,
   beta_column,
   se_column,
-  odds_ratios,
-  custom_palette,
-  primary_track,
-  error_bar_ends
+  odds_ratios = F,
+  custom_palette = viridis::viridis(n = total_track_number + 5)[total_track_number + 5:1],
+  primary_track = 1,
+  error_bar_ends = TRUE,
+  axis_label_size = 0.5,
+  text_size = 1.5,
+  point_size = 1,
+  add_legend = FALSE,
+  track_name_column = track_id_column
 )
 }
 \arguments{
@@ -33,73 +38,24 @@ circos_protein_plot(
 
 \item{se_column}{column containing standard error}
 
-\item{odds_ratios}{(optional) boolean value, whether to generate and plot odds ratios from beta and se (default = FALSE)}
+\item{odds_ratios}{(optional) provide vector of track numbers to exponentiate or T if applying to all tracks (default = F)}
 
-\item{custom_palette}{provide custom colour palette, supports viridis or custom vector}
+\item{custom_palette}{(optional) provide custom colour palette, supports viridis or custom vector}
 
 \item{primary_track}{variable from "track_id_column" to determine which track is first to plot and used to generate names}
 
 \item{error_bar_ends}{(optional) boolean value, whether to add ends to error bars (default = TRUE)}
+
+\item{axis_label_size}{(optional) custom label size for axis}
+
+\item{text_size}{(optional) custom text size for outer labels}
+
+\item{point_size}{(optional) custom size for points on plots}
+
+\item{add_legend}{add in track legend (default = FALSE)}
+
+\item{track_name_column}{(optional) column containing track names (default = uses track_id_column)}
 }
 \description{
 A solution to displaying multiple sources of data for the same values on multiple tracks with segements based on custom criteria, provided with a data frame, customise which tracks data is displayed on, how many tracks are required, the segments to subset the data by, custom colour scheme, generate odds ratios and deal with missing data. This package uses the 'circlize' package to create beautiful publication ready circular plots for protein or metabolite data from a number of different analyses, adjusting track size for the best visualisation.
-}
-\examples{
-### example data for circos ###
-n_values <- 50
-letters52 <- c(letters,paste0(letters, letters))
-proteins <- letters52[1:50]
-
-sample_reverse_mr <- data.frame(protein = proteins,
-                                disease = rep("cancer", n_values),
-                                method = rep("Inverse variance weighted", n_values),
-                                b = runif(n=n_values, min=1, max=2),
-                                se = runif(n=n_values, min=-1, max=1),
-                                track_id = 1)
-
-sample_forward_mr <- data.frame(protein = proteins,
-                                disease = rep("cancer", n_values),
-                                method = rep("Inverse variance weighted", n_values),
-                                b = runif(n=n_values, min=1, max=2),
-                                se = runif(n=n_values, min=-1, max=1),
-                                track_id = 2)
-
-sample_obvs <- data.frame(protein = proteins,
-                          disease = rep("cancer", n_values),
-                          method = rep("observational", n_values),
-                          b = runif(n=n_values, min=1, max=2),
-                          se = runif(n=n_values, min=-1, max=1),
-                          track_id = 3)
-
-sample_prs <- data.frame(protein = proteins,
-                         disease = rep("cancer", n_values),
-                         method = rep("prs", n_values),
-                         b = runif(n=n_values, min=-1, max=1),
-                         se = runif(n=n_values, min=-1, max=1),
-                         track_id = 4)
-
-
-sample_extra <- data.frame(protein = proteins,
-                           disease = rep("cancer", n_values),
-                           method = rep("prs", n_values),
-                           b = runif(n=n_values, min=-1, max=1),
-                           se = runif(n=n_values, min=-1, max=1),
-                           track_id = 5)
-
-segment_data <- data.frame(protein = proteins, segment = rep(c("segment 1", "segment 2", "segment 3", "segment 4", "segment 5"), length(proteins)/5))
-
-sample_data <- rbind(sample_obvs, sample_prs, sample_reverse_mr, sample_forward_mr[as.integer(runif(n=50, min=1, max=n_values)) \%>\% unique(),])
-sample_data <- sample_data \%>\% inner_join(segment_data)
-
-plot <- circos_protein_plot(circos_data = sample_data,
-                    total_track_number = 5,
-                    track_id_column = "track_id",
-                    segment_names_column = "segment",
-                    protein_column = "protein",
-                    beta_column = "b",
-                    se_column = "se",
-                    odds_ratios = T,
-                    primary_track = 1,
-                    error_bar_ends = T)
-print(plot)
 }
